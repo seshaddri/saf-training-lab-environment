@@ -29,3 +29,31 @@ jobs:
       # checkout the profile, because that's where our profile is!
       - name: PREP - Check out this repository  
         uses: actions/checkout@v3
+
+      # double-check that we don't have any serious issues in our profile code
+      - name: LINT - Run InSpec Check           
+        run: inspec check $PROFILE
+
+      # launch a container as the test target
+      - name: DEPLOY - Run a Docker container from nginx
+        run: docker run -dit --name nginx nginx:latest
+
+      # install dependencies on the container so that hardening will work
+      - name: DEPLOY - Install Python for our nginx container
+        run: |
+          docker exec nginx apt-get update -y
+          docker exec nginx apt-get install -y python3
+
+      # fetch the hardening role and requirements
+      - name: HARDEN - Fetch Ansible role
+        run: |
+          git clone --branch docker https://github.com/mitre/ansible-nginx-stigready-hardening.git || true
+          chmod 755 ansible-nginx-stigready-hardening
+
+      - name: HARDEN - Fetch Ansible requirements
+        run: ansible-galaxy install -r ansible-nginx-stigready-hardening/requirements.yml
+
+      # harden!
+      - name: HARDEN - Run Ansible hardening
+        run: ansible-playbook --inventory=nginx, --connection=docker ansible-nginx-stigready-hardening/hardening-playbook.yml
+        
