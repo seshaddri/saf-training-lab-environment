@@ -1,4 +1,31 @@
 name: Demo Security Validation Gold Image Pipeline
-on:
+
+# define the triggers for this action
+on:                                             
   push:
-    branches: [main, pipeline]
+    # trigger this action on any push to main branch
+    branches: [ main, pipeline ]                
+
+jobs:
+  gold-image:
+    name: Gold Image NGINX
+    runs-on: ubuntu-24.04
+    env:
+       # so that we can use InSpec without manually accepting the license
+      CHEF_LICENSE: accept  
+       # path to our profile                   
+      PROFILE: my_nginx                        
+    steps:
+      # updating all dependencies is always a good start
+      - name: PREP - Update runner              
+        run: sudo apt-get update
+
+      - name: PREP - Install InSpec executable 
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec -v 5
+
+      - name: PREP - Install SAF CLI
+        run: npm install -g @mitre/saf
+
+      # checkout the profile, because that's where our profile is!
+      - name: PREP - Check out this repository  
+        uses: actions/checkout@v3

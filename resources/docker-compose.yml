@@ -1,15 +1,16 @@
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
 version: '3'
 services:
-  workstation:
-    container_name: workstation
-    image: learnchef/inspec_workstation
-    stdin_open: true
+  operatingsystem:
+    image: redhat/ubi9
+    container_name: redhat9
     tty: true
-    links:
-      - target
-    volumes:
-      - .:/root
-  target:
-    image: learnchef/inspec_target
     stdin_open: true
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     tty: true
+    stdin_open: true
+    restart: always

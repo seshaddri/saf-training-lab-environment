@@ -1,0 +1,15 @@
+name: my_git
+title: InSpec Profile
+maintainer: The Authors
+copyright: The Authors
+copyright_email: you@example.com
+license: Apache-2.0
+summary: An InSpec Compliance Profile
+version: 0.1.0
+supports:
+  platform: os
+
+inputs:
+  - name: git_dir
+    type: String
+    value: /workspaces/saf-training-lab-environment/git_test_target/.git

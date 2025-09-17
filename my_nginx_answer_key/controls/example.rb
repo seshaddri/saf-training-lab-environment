@@ -63,3 +63,12 @@ control 'nginx-interview' do
     skip "This control must be manually reviewed."
   end
 end
+control 'nginx-interview-2' do
+  impact 0.0
+  title 'NGINX interview'
+  desc 'NGINX admins should have documentation on security procedures.'
+
+  describe "Manual Review" do
+    skip "This control must be manually reviewed."
+  end
+end
