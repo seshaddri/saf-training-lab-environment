@@ -62,7 +62,7 @@ jobs:
         continue-on-error: true                
         run: |
           inspec exec $PROFILE \
-          --input-file=$PROFILE/inputs-linux.yml \
+          --input-file=$PROFILE/inputs.yml \
           --target docker://nginx \
           --reporter cli json:results/pipeline_run.json
 
