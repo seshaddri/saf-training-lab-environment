@@ -62,7 +62,7 @@ jobs:
         continue-on-error: true                
         run: |
           inspec exec $PROFILE \
-          --input-file=$PROFILE/inputs.yml \
+          --input-file=$PROFILE/inputs-linux.yml \
           --target docker://nginx \
           --reporter cli json:results/pipeline_run.json
 
@@ -76,3 +76,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: results/pipeline_run_attested.json
+
+      # drop off the data with our dashboard
+      - name: VALIDATE - Upload to Heimdall
+        continue-on-error: true
+        run: |
+          curl -# -s -F data=@results/pipeline_run_attested.json -F "filename=${{ github.actor }}-pipeline-demo-${{ github.sha }}.json" -F "public=true" -F "evaluationTags=${{ github.repository }},${{ github.workflow }}" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "https://heimdall-demo.mitre.org/evaluations"
