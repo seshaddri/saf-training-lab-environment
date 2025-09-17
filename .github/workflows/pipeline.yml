@@ -1,0 +1,4 @@
+name: Demo Security Validation Gold Image Pipeline
+on:
+  push:
+    branches: [main, pipeline]
